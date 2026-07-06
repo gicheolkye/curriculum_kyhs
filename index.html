@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>광영고등학교 교육과정 학점 배당표</title>
+<style>
+  :root{
+    --navy:#1f3a5f;
+    --navy-deep:#152a47;
+    --accent:#c08a2e;
+    --bg:#f5f6f8;
+    --card:#ffffff;
+    --line:#e3e6ea;
+    --ink:#26282c;
+    --sub:#6b7280;
+    --zebra:#f7f8fa;
+    --pool:#fbf3e3;
+    --alt:#eef3fb;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.5;
+  }
+
+  header{
+    background:var(--navy-deep);
+    color:#eef1f6;
+    padding:28px 20px 22px;
+  }
+  header .eyebrow{
+    font-size:11.5px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:var(--accent);
+    font-weight:700;
+    margin-bottom:8px;
+  }
+  .header-logo{
+    display:inline-flex;
+    align-items:center;
+    background:#fff;
+    padding:6px 14px;
+    border-radius:8px;
+    margin-bottom:14px;
+  }
+  .header-logo img{
+    display:block;
+    height:30px;
+    width:auto;
+  }
+  header h1{
+    margin:0 0 4px;
+    font-size:22px;
+    font-weight:800;
+  }
+  header p{
+    margin:0;
+    font-size:13px;
+    color:#aab4c4;
+  }
+
+  .wrap{ max-width:880px; margin:0 auto; padding:18px 14px 60px; }
+
+  /* ---------- Level 1 tabs (grade) ---------- */
+  .tabs-l1{
+    display:flex;
+    gap:6px;
+    margin-bottom:14px;
+  }
+  .tabs-l1 button{
+    flex:1;
+    padding:12px 10px;
+    border:1px solid var(--line);
+    background:var(--card);
+    color:var(--sub);
+    font-weight:700;
+    font-size:14px;
+    border-radius:10px;
+    cursor:pointer;
+    font-family:inherit;
+    transition:all .15s ease;
+  }
+  .tabs-l1 button.active{
+    background:var(--navy);
+    border-color:var(--navy);
+    color:#fff;
+  }
+
+  .grade-panel{ display:none; }
+  .grade-panel.active{ display:block; }
+
+  /* ---------- Level 2 tabs (구분) ---------- */
+  .tabs-l2{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:6px;
+    margin-bottom:14px;
+  }
+  .tabs-l2 button{
+    flex:1;
+    min-width:76px;
+    padding:9px 8px;
+    border:none;
+    background:transparent;
+    color:var(--sub);
+    font-weight:600;
+    font-size:13px;
+    border-radius:8px;
+    cursor:pointer;
+    font-family:inherit;
+  }
+  .tabs-l2 button.active{
+    background:var(--accent);
+    color:#fff;
+  }
+
+  .sub-panel{ display:none; }
+  .sub-panel.active{ display:block; }
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    overflow:hidden;
+  }
+
+  .card-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:8px;
+    padding:14px 16px;
+    border-bottom:1px solid var(--line);
+    background:#fafbfc;
+  }
+  .card-head h2{
+    margin:0;
+    font-size:14.5px;
+    color:var(--navy);
+    font-weight:800;
+  }
+  .banner-tags{ display:flex; gap:6px; flex-wrap:wrap; }
+  .banner-tags span{
+    background:var(--navy);
+    color:#fff;
+    font-size:12px;
+    font-weight:700;
+    padding:4px 10px;
+    border-radius:999px;
+    white-space:nowrap;
+  }
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    table-layout:fixed;
+    font-size:12.6px;
+  }
+  th, td{
+    border-bottom:1px solid var(--line);
+    padding:8px 6px;
+    text-align:center;
+    vertical-align:middle;
+    word-break:keep-all;
+  }
+  thead th{
+    background:var(--navy);
+    color:#eef1f6;
+    font-weight:700;
+    font-size:11.5px;
+    padding:9px 6px;
+  }
+  .sub-h{ display:block; font-weight:400; font-size:10px; opacity:.85; }
+
+  td.name{ text-align:left; font-weight:600; padding-left:10px; }
+  td.subj{
+    font-weight:800;
+    color:var(--navy);
+    background:#eef1f6;
+  }
+  td.type{ color:var(--sub); font-size:12px; }
+  td.credit{ color:var(--ink); font-variant-numeric:tabular-nums; }
+  .slash{ color:var(--sub); margin:0 1px; }
+  td.credit-total{
+    font-weight:800;
+    color:var(--navy-deep);
+    background:#f2ede0;
+  }
+  .paren{ color:var(--sub); font-weight:500; font-size:11px; }
+  td.sem-cell{ font-size:12px; }
+  td.note{ font-size:11.5px; color:var(--sub); }
+  .sem-pill{
+    display:inline-block;
+    background:var(--navy);
+    color:#fff;
+    font-size:10.5px;
+    font-weight:700;
+    padding:1px 6px;
+    border-radius:999px;
+    margin-right:3px;
+  }
+  .sem-pill.alt{ background:var(--navy); }
+  .sem-pill.pool{ background:var(--accent); }
+  td.sem-cell:has(.pool){ background:var(--pool); }
+  i{ font-style:normal; color:var(--sub); font-size:10.5px; }
+
+  tbody tr:nth-child(even) td:not(.subj):not(.credit-total){ background:var(--zebra); }
+
+  .foot-note{
+    margin:14px 2px 0;
+    background:#fff9ee;
+    border:1px solid #eadfc4;
+    border-radius:10px;
+    padding:12px 14px;
+    font-size:12px;
+    color:#5b5138;
+    line-height:1.7;
+  }
+  .foot-note b{ color:var(--navy-deep); }
+
+  /* ---------- Summary (총계) tab ---------- */
+  .summary-table td, .summary-table th{ text-align:center; }
+  .summary-table td.grade-cell{ font-weight:800; color:var(--navy); background:#eef1f6; }
+  .summary-table tr.grand td{
+    background:var(--navy);
+    color:#fff;
+    font-weight:800;
+  }
+  .stat-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+    padding:14px 16px 4px;
+  }
+  .stat-box{
+    background:#f2f4f7;
+    border-radius:10px;
+    padding:12px;
+    text-align:center;
+  }
+  .stat-box .num{ font-size:20px; font-weight:800; color:var(--navy-deep); }
+  .stat-box .lbl{ font-size:11.5px; color:var(--sub); margin-top:2px; }
+
+  footer{
+    text-align:center;
+    font-size:11.5px;
+    color:#9aa1ac;
+    padding:26px 0 10px;
+  }
+
+  @media (min-width:640px){
+    table{ font-size:13.5px; }
+    td.name{ padding-left:14px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-logo"><img src="data:image/png;base64,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" alt="광영고등학교 Kwangyoung High School"></div>
+  <h1>교육과정 학점 배당표</h1>
+  <p>2022 개정 교육과정에 따른 학년별 이수 과목 및 학점 편성</p>
+</header>
+
+<div class="wrap">
+
+  <div class="tabs-l1">
+    <button class="active" onclick="showGrade('g1',this)">현재 1학년 <span style="font-weight:400;opacity:.8">· 2026학년도 입학</span></button>
+    <button onclick="showGrade('g2',this)">현재 2학년 <span style="font-weight:400;opacity:.8">· 2025학년도 입학</span></button>
+  </div>
+
+  <!-- ================= GRADE 1 ================= -->
+  <section id="grade-g1" class="grade-panel active">
+
+    <div class="tabs-l2">
+      <button class="active" onclick="showSub('g1','a',this)">학교지정</button>
+      <button onclick="showSub('g1','b',this)">2학년 선택</button>
+      <button onclick="showSub('g1','c',this)">3학년 선택</button>
+      <button onclick="showSub('g1','d',this)">총계</button>
+    </div>
+
+    <div id="g1-a" class="sub-panel active"></div>
+    <div id="g1-b" class="sub-panel"></div>
+    <div id="g1-c" class="sub-panel"></div>
+    <div id="g1-d" class="sub-panel"></div>
+
+    <div class="foot-note">
+      <b>※ 유의사항</b><br>
+      · 미개설 교과의 경우 학교 간 공동교육과정의 개설 교과를 통해 이수할 수 있음<br>
+      · 보통 교과는 5등급 상대평가 + 5단계 성취도 절대평가. 단, 사회·과학 교과의 융합 선택과목은 5단계 성취도 절대평가, 체육·예술 교과(군)/과학탐구실험은 3단계 성취도 절대평가, 교양교과는 미평가 과목(P)<br>
+      · 2, 3학년 선택과목 중 국어, 수학, 영어 교과는 최대 15학점(5과목)까지 선택 가능
+    </div>
+  </section>
+
+  <!-- ================= GRADE 2 ================= -->
+  <section id="grade-g2" class="grade-panel">
+
+    <div class="tabs-l2">
+      <button class="active" onclick="showSub('g2','a',this)">학교지정</button>
+      <button onclick="showSub('g2','b',this)">2학년 선택</button>
+      <button onclick="showSub('g2','c',this)">3학년 선택</button>
+      <button onclick="showSub('g2','d',this)">총계</button>
+    </div>
+
+    <div id="g2-a" class="sub-panel active"></div>
+    <div id="g2-b" class="sub-panel"></div>
+    <div id="g2-c" class="sub-panel"></div>
+    <div id="g2-d" class="sub-panel"></div>
+
+    <div class="foot-note">
+      <b>※ 유의사항</b><br>
+      · 미개설 교과의 경우 학교 간 공동교육과정의 개설 교과를 통해 이수할 수 있음<br>
+      · 보통 교과는 5등급 상대평가 + 5단계 성취도 절대평가. 단, 사회·과학 교과의 융합 선택과목은 5단계 성취도 절대평가, 체육·예술 교과(군)/과학탐구실험은 3단계 성취도 절대평가, 교양교과는 미평가 과목(P)<br>
+      · 2, 3학년 선택과목 중 국어, 수학, 영어 교과는 최대 15학점(5과목)까지 선택 가능
+    </div>
+  </section>
+
+</div>
+
+<footer>광영고등학교 교육과정 학점 배당표 자료를 바탕으로 재구성함</footer>
+
+<script id="data-g1" type="application/json">{
+ "sec1": {
+  "headers": [
+   "교과(군)",
+   "과목 유형",
+   "과목",
+   "학점<br><span class='sub-h'>기본/운영</span>",
+   "이수 시기",
+   "이수학점<br><span class='sub-h'>(필수)</span>"
+  ],
+  "rows": [
+   "<tr><td class=\"subj\" rowspan=\"6\">국 어</td><td class=\"type\">공통</td><td class=\"name\">공통국어1</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"sem-cell\"><span class='sem-pill'>1-1</span> 3학점</td><td class=\"credit-total\" rowspan=\"6\">22<span class='paren'>(8)</span></td></tr>",
+   "<tr><td class=\"type\">공통</td><td class=\"name\">공통국어2</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"sem-cell\"><span class='sem-pill'>1-2</span> 3학점</td></tr>",
+   "<tr><td class=\"type\">일반</td><td class=\"name\">문학</td><td class=\"credit\">4</td><td class=\"sem-cell\"><span class='sem-pill'>2-1</span> 4학점</td></tr>",
+   "<tr><td class=\"type\">일반</td><td class=\"name\">독서와 작문</td><td class=\"credit\">4</td><td class=\"sem-cell\"><span class='sem-pill'>2-2</span> 4학점</td></tr>",
+   "<tr><td class=\"type\">일반</td><td class=\"name\">화법과 언어</td><td class=\"credit\">4</td><td class=\"sem-cell\"><span class='sem-pill'>3-1</span> 4학점</td></tr>",
+   "<tr><td class=\"type\">융합</td><td class=\"name\">독서 토론과 글쓰기</td><td class=\"credit\">4</td><td class=\"sem-cell\"><span class='sem-pill'>3-2</span> 4학점</td></tr>",
+   "<tr><td class=\"subj\" rowspan=\"6\">수 학</td><td class=\"type\">공통</td><td class=\"name\">공통수학1</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"sem-cell\"><span class='sem-pill'>1-1</span> 3학점</td><td class=\"credit-total\" rowspan=\"6\">22<span class='paren'>(8)</span></td></tr>",
+   "<tr><td class=\"type\">공통</td><td class=\"name\">공통수학2</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"sem-cell\"><span class='sem-pill'>1-2</span> 3학점</td></tr>",
+   "<tr><td class=\"type\">일반</td><td class=\"name\">대수</td><td class=\"credit\">4</td><td class=\"sem-cell\"><span class='sem-pill'>2-1</span> 4학점</td></tr>",
+   "<tr><td class=\"type\">일반</td><td class=\"name\">미적분Ⅰ</td><td class=\"credit\">4</td><td class=\"sem-cell\"><span class='sem-pill'>2-2</span> 4학점</td></tr>",
+   "<tr><td class=\"type\">일반</td><td class=\"name\">확률과 통계</td><td class=\"credit\">4</td><td class=\"sem-cell\"><span class='sem-pill'>3-1</span> 4학점</td></tr>",
+   "<tr><td class=\"type\">융합</td><td class=\"name\">실용 통계</td><td class=\"credit\">4</td><td class=\"sem-cell\"><span class='sem-pill'>3-2</span> 4학점</td></tr>",
+   "<tr><td class=\"subj\" rowspan=\"6\">영 어</td><td class=\"type\">공통</td><td class=\"name\">공통영어1</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"sem-cell\"><span class='sem-pill'>1-1</span> 3학점</td><td class=\"credit-total\" rowspan=\"6\">22<span class='paren'>(8)</span></td></tr>",
+   "<tr><td class=\"type\">공통</td><td class=\"name\">공통영어2</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"sem-cell\"><span class='sem-pill'>1-2</span> 3학점</td></tr>",
+   "<tr><td class=\"type\">일반</td><td class=\"name\">영어Ⅰ</td><td class=\"credit\">4</td><td class=\"sem-cell\"><span class='sem-pill'>2-1</span> 4학점</td></tr>",
+   "<tr><td class=\"type\">일반</td><td class=\"name\">영어Ⅱ</td><td class=\"credit\">4</td><td class=\"sem-cell\"><span class='sem-pill'>2-2</span> 4학점</td></tr>",
+   "<tr><td class=\"type\">일반</td><td class=\"name\">영어 독해와 작문</td><td class=\"credit\">4</td><td class=\"sem-cell\"><span class='sem-pill'>3-1</span> 4학점</td></tr>",
+   "<tr><td class=\"type\">융합</td><td class=\"name\">미디어 영어</td><td class=\"credit\">4</td><td class=\"sem-cell\"><span class='sem-pill'>3-2</span> 4학점</td></tr>",
+   "<tr><td class=\"subj\" rowspan=\"4\">사 회<br>(역사/도덕 포함)</td><td class=\"type\">공통</td><td class=\"name\">한국사1</td><td class=\"credit\">3</td><td class=\"sem-cell\"><span class='sem-pill'>1-1</span> 3학점</td><td class=\"credit-total\" rowspan=\"2\">6<span class='paren'>(6)</span></td></tr>",
+   "<tr><td class=\"type\">공통</td><td class=\"name\">한국사1</td><td class=\"credit\">3</td><td class=\"sem-cell\"><span class='sem-pill'>1-2</span> 3학점</td></tr>",
+   "<tr><td class=\"type\">공통</td><td class=\"name\">통합사회1</td><td class=\"credit\">4</td><td class=\"sem-cell\"><span class='sem-pill'>1-1</span> 4학점</td><td class=\"credit-total\" rowspan=\"2\">8<span class='paren'>(8)</span></td></tr>",
+   "<tr><td class=\"type\">공통</td><td class=\"name\">통합사회2</td><td class=\"credit\">4</td><td class=\"sem-cell\"><span class='sem-pill'>1-2</span> 4학점</td></tr>",
+   "<tr><td class=\"subj\" rowspan=\"4\">과 학</td><td class=\"type\">공통</td><td class=\"name\">통합과학1</td><td class=\"credit\">4</td><td class=\"sem-cell\"><span class='sem-pill'>1-1</span> 4학점</td><td class=\"credit-total\" rowspan=\"4\">10<span class='paren'>(10)</span></td></tr>",
+   "<tr><td class=\"type\">공통</td><td class=\"name\">통합과학2</td><td class=\"credit\">4</td><td class=\"sem-cell\"><span class='sem-pill'>1-2</span> 4학점</td></tr>",
+   "<tr><td class=\"type\">공통</td><td class=\"name\">과학탐구실험1</td><td class=\"credit\">1</td><td class=\"sem-cell\"><span class='sem-pill'>1-1</span> 1학점</td></tr>",
+   "<tr><td class=\"type\">공통</td><td class=\"name\">과학탐구실험2</td><td class=\"credit\">1</td><td class=\"sem-cell\"><span class='sem-pill'>1-2</span> 1학점</td></tr>",
+   "<tr><td class=\"subj\" rowspan=\"6\">체 육</td><td class=\"type\">일반</td><td class=\"name\">체육1</td><td class=\"credit\">3<span class='slash'>/</span>2</td><td class=\"sem-cell\"><span class='sem-pill'>1-1</span> 2학점</td><td class=\"credit-total\" rowspan=\"6\">10<span class='paren'>(10)</span></td></tr>",
+   "<tr><td class=\"type\">일반</td><td class=\"name\">체육2</td><td class=\"credit\">3<span class='slash'>/</span>2</td><td class=\"sem-cell\"><span class='sem-pill'>1-2</span> 2학점</td></tr>",
+   "<tr><td class=\"type\">융합</td><td class=\"name\">스포츠 생활1</td><td class=\"credit\">3<span class='slash'>/</span>2</td><td class=\"sem-cell\"><span class='sem-pill'>2-1</span> 2학점</td></tr>",
+   "<tr><td class=\"type\">융합</td><td class=\"name\">스포츠 생활2</td><td class=\"credit\">3<span class='slash'>/</span>2</td><td class=\"sem-cell\"><span class='sem-pill'>2-2</span> 2학점</td></tr>",
+   "<tr><td class=\"type\">진로</td><td class=\"name\">스포츠 문화</td><td class=\"credit\">2<span class='slash'>/</span>1</td><td class=\"sem-cell\"><span class='sem-pill'>3-1</span> 1학점</td></tr>",
+   "<tr><td class=\"type\">진로</td><td class=\"name\">스포츠 과학</td><td class=\"credit\">2<span class='slash'>/</span>1</td><td class=\"sem-cell\"><span class='sem-pill'>3-2</span> 1학점</td></tr>",
+   "<tr><td class=\"subj\" rowspan=\"4\">예 술</td><td class=\"type\">일반</td><td class=\"name\">음악</td><td class=\"credit\">3</td><td class=\"sem-cell\"><span class='sem-pill'>1-1</span> 3학점<br><span class='sem-pill alt'>1-2</span> [3] <i>대체</i></td><td class=\"credit-total\" rowspan=\"4\">10<span class='paren'>(10)</span></td></tr>",
+   "<tr><td class=\"type\">일반</td><td class=\"name\">미술</td><td class=\"credit\">3</td><td class=\"sem-cell\"><span class='sem-pill alt'>1-1</span> [3] <i>대체</i><br><span class='sem-pill'>1-2</span> 3학점</td></tr>",
+   "<tr><td class=\"type\">진로</td><td class=\"name\">음악 감상과 비평</td><td class=\"credit\">3<span class='slash'>/</span>2</td><td class=\"sem-cell\"><span class='sem-pill'>3-1</span> 2학점<br><span class='sem-pill alt'>3-2</span> [2] <i>대체</i></td></tr>",
+   "<tr><td class=\"type\">진로</td><td class=\"name\">미술 감상과 비평</td><td class=\"credit\">3<span class='slash'>/</span>2</td><td class=\"sem-cell\"><span class='sem-pill alt'>3-1</span> [2] <i>대체</i><br><span class='sem-pill'>3-2</span> 2학점</td></tr>",
+   "<tr><td class=\"subj\" rowspan=\"2\">기술∙가정/정보</td><td class=\"type\">일반</td><td class=\"name\">정보</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"sem-cell\"><span class='sem-pill'>1-1</span> 3학점<br><span class='sem-pill alt'>1-2</span> [3] <i>대체</i></td><td class=\"credit-total\" rowspan=\"2\">6<span class='paren'>(10)</span></td></tr>",
+   "<tr><td class=\"type\">진로</td><td class=\"name\">로봇과 공학세계</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"sem-cell\"><span class='sem-pill alt'>1-1</span> [3] <i>대체</i><br><span class='sem-pill'>1-2</span> 3학점</td></tr>",
+   "<tr><td class=\"subj\" rowspan=\"2\">교 양</td><td class=\"type\">일반</td><td class=\"name\">진로와 직업</td><td class=\"credit\">3<span class='slash'>/</span>2</td><td class=\"sem-cell\"><span class='sem-pill'>3-1</span> 2학점</td><td class=\"credit-total\" rowspan=\"2\">4</td></tr>",
+   "<tr><td class=\"type\">일반</td><td class=\"name\">생태와 환경</td><td class=\"credit\">3<span class='slash'>/</span>2</td><td class=\"sem-cell\"><span class='sem-pill'>3-2</span> 2학점</td></tr>"
+  ],
+  "banner": [
+   "이수학점 합계 120학점"
+  ],
+  "n_cols": 6
+ },
+ "sec2": {
+  "headers": [
+   "교과(군)",
+   "과목 유형",
+   "과목",
+   "학점<br><span class='sub-h'>기본/운영</span>",
+   "이수 시기"
+  ],
+  "rows": [
+   "<tr><td class=\"subj\">국 어</td><td class=\"type\">진로</td><td class=\"name\">문학과 영상</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"sem-cell\" rowspan=\"11\"><span class='sem-pill pool'>2-1</span> 12<br>(택4)</td></tr>",
+   "<tr><td class=\"subj\">수 학</td><td class=\"type\">진로</td><td class=\"name\">기하</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>",
+   "<tr><td class=\"subj\">영 어</td><td class=\"type\">진로</td><td class=\"name\">영미 문학 읽기</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>",
+   "<tr><td class=\"subj\" rowspan=\"4\">사 회<br>(역사/도덕 포함)</td><td class=\"type\">일반</td><td class=\"name\">세계사</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>",
+   "<tr><td class=\"type\">일반</td><td class=\"name\">사회와 문화</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>",
+   "<tr><td class=\"type\">일반</td><td class=\"name\">현대사회와 윤리</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>",
+   "<tr><td class=\"type\">일반</td><td class=\"name\">세계시민과 지리</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>",
+   "<tr><td class=\"subj\" rowspan=\"4\">과 학</td><td class=\"type\">일반</td><td class=\"name\">물리학</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>",
+   "<tr><td class=\"type\">일반</td><td class=\"name\">화학</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>",
+   "<tr><td class=\"type\">일반</td><td class=\"name\">생명과학</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>",
+   "<tr><td class=\"type\">일반</td><td class=\"name\">지구과학</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>",
+   "<tr><td class=\"subj\" rowspan=\"2\">제2외국어/한문</td><td class=\"type\">일반</td><td class=\"name\">중국어</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"sem-cell\" rowspan=\"2\"><span class='sem-pill pool'>2-1</span> 3<br>(택1)</td></tr>",
+   "<tr><td class=\"type\">일반</td><td class=\"name\">일본어</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>",
+   "<tr><td class=\"subj\">국 어</td><td class=\"type\">융합</td><td class=\"name\">매체 의사소통</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"sem-cell\" rowspan=\"11\"><span class='sem-pill pool'>2-2</span> 12<br>(택4)</td></tr>",
+   "<tr><td class=\"subj\">수 학</td><td class=\"type\">진로</td><td class=\"name\">인공지능 수학</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>",
+   "<tr><td class=\"subj\">영 어</td><td class=\"type\">진로</td><td class=\"name\">심화 영어</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>",
+   "<tr><td class=\"subj\" rowspan=\"4\">사 회<br>(역사/도덕 포함)</td><td class=\"type\">진로</td><td class=\"name\">도시의 미래 탐구</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>",
+   "<tr><td class=\"type\">진로</td><td class=\"name\">정치</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>",
+   "<tr><td class=\"type\">진로</td><td class=\"name\">인문학과 윤리</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>",
+   "<tr><td class=\"type\">융합</td><td class=\"name\">역사로 탐구하는 현대 세계</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>",
+   "<tr><td class=\"subj\" rowspan=\"4\">과 학</td><td class=\"type\">진로</td><td class=\"name\">역학과 에너지</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>",
+   "<tr><td class=\"type\">진로</td><td class=\"name\">물질과 에너지</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>",
+   "<tr><td class=\"type\">진로</td><td class=\"name\">세포와 물질대사</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>",
+   "<tr><td class=\"type\">진로</td><td class=\"name\">지구시스템과학</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>",
+   "<tr><td class=\"subj\" rowspan=\"2\">제2외국어/한문</td><td class=\"type\">진로</td><td class=\"name\">중국어 회화</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"sem-cell\" rowspan=\"2\"><span class='sem-pill pool'>2-2</span> 3<br>(택1)</td></tr>",
+   "<tr><td class=\"type\">진로</td><td class=\"name\">일본어 회화</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>"
+  ],
+  "banner": [
+   "이수학점 30학점"
+  ],
+  "n_cols": 5
+ },
+ "sec3": {
+  "headers": [
+   "교과(군)",
+   "과목 유형",
+   "과목",
+   "학점<br><span class='sub-h'>기본/운영</span>",
+   "이수 시기",
+   "비고"
+  ],
+  "rows": [
+   "<tr><td class=\"subj\">국 어</td><td class=\"type\">진로</td><td class=\"name\">주제 탐구 독서</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"sem-cell\" rowspan=\"13\"><span class='sem-pill pool'>3-1</span> 12<br>(택4)</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"subj\">수 학</td><td class=\"type\">진로</td><td class=\"name\">미적분Ⅱ</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"subj\">영 어</td><td class=\"type\">진로</td><td class=\"name\">심화 영어 독해와 작문</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"subj\" rowspan=\"6\">사 회<br>(역사/도덕 포함)</td><td class=\"type\">진로</td><td class=\"name\">한국지리 탐구</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"type\">진로</td><td class=\"name\">동아시아 역사 기행</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"type\">진로</td><td class=\"name\">법과 사회</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"type\">진로</td><td class=\"name\">경제</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"type\">진로</td><td class=\"name\">윤리와 사상</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"type\">진로</td><td class=\"name\">국제 관계의 이해</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"subj\" rowspan=\"4\">과 학</td><td class=\"type\">진로</td><td class=\"name\">전자기와 양자</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"type\">진로</td><td class=\"name\">화학 반응의 세계</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"type\">진로</td><td class=\"name\">생물의 유전</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"type\">진로</td><td class=\"name\">행성우주과학</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"subj\">국 어</td><td class=\"type\">융합</td><td class=\"name\">언어생활 탐구</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"sem-cell\" rowspan=\"11\"><span class='sem-pill pool'>3-2</span> 12<br>(택4)</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"subj\">수 학</td><td class=\"type\">진로</td><td class=\"name\">전문 수학</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"note\">특목고 선택 과목</td></tr>",
+   "<tr><td class=\"subj\">영 어</td><td class=\"type\">융합</td><td class=\"name\">세계 문화와 영어</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"subj\" rowspan=\"5\">사 회<br>(역사/도덕 포함)</td><td class=\"type\">융합</td><td class=\"name\">여행지리</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"type\">융합</td><td class=\"name\">사회문제 탐구</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"type\">융합</td><td class=\"name\">금융과 경제생활</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"type\">융합</td><td class=\"name\">윤리문제 탐구</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"type\">융합</td><td class=\"name\">기후변화와 지속가능한 세계</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"subj\" rowspan=\"3\">과 학</td><td class=\"type\">융합</td><td class=\"name\">과학의 역사와 문화</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"type\">융합</td><td class=\"name\">기후변화와 환경생태</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"type\">융합</td><td class=\"name\">융합과학 탐구</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"note\"></td></tr>"
+  ],
+  "banner": [
+   "이수학점 24학점"
+  ],
+  "n_cols": 6
+ },
+ "summary_rows": [
+  {
+   "grade": "1학년",
+   "sem": "1학기",
+   "subj": 29,
+   "act": 3,
+   "tot": 32,
+   "cnt": 10
+  },
+  {
+   "grade": "1학년",
+   "sem": "2학기",
+   "subj": 29,
+   "act": 3,
+   "tot": 32,
+   "cnt": 10
+  },
+  {
+   "grade": "2학년",
+   "sem": "1학기",
+   "subj": 29,
+   "act": 3,
+   "tot": 32,
+   "cnt": 9
+  },
+  {
+   "grade": "2학년",
+   "sem": "2학기",
+   "subj": 29,
+   "act": 3,
+   "tot": 32,
+   "cnt": 9
+  },
+  {
+   "grade": "3학년",
+   "sem": "1학기",
+   "subj": 29,
+   "act": 3,
+   "tot": 32,
+   "cnt": 10
+  },
+  {
+   "grade": "3학년",
+   "sem": "2학기",
+   "subj": 29,
+   "act": 3,
+   "tot": 32,
+   "cnt": 10
+  }
+ ],
+ "grand": {
+  "subj_total": 174,
+  "act_total": 18,
+  "tot_total": 192,
+  "year_totals": [
+   64,
+   64,
+   64
+  ]
+ }
+}</script>
+<script id="data-g2" type="application/json">{
+ "sec1": {
+  "headers": [
+   "교과(군)",
+   "과목 유형",
+   "과목",
+   "학점<br><span class='sub-h'>기본/운영</span>",
+   "이수 시기",
+   "이수학점<br><span class='sub-h'>(필수)</span>"
+  ],
+  "rows": [
+   "<tr><td class=\"subj\" rowspan=\"6\">국 어</td><td class=\"type\">공통</td><td class=\"name\">공통국어1</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"sem-cell\"><span class='sem-pill'>1-1</span> 3학점</td><td class=\"credit-total\" rowspan=\"6\">22<span class='paren'>(8)</span></td></tr>",
+   "<tr><td class=\"type\">공통</td><td class=\"name\">공통국어2</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"sem-cell\"><span class='sem-pill'>1-2</span> 3학점</td></tr>",
+   "<tr><td class=\"type\">일반</td><td class=\"name\">문학</td><td class=\"credit\">4</td><td class=\"sem-cell\"><span class='sem-pill'>2-1</span> 4학점</td></tr>",
+   "<tr><td class=\"type\">일반</td><td class=\"name\">독서와 작문</td><td class=\"credit\">4</td><td class=\"sem-cell\"><span class='sem-pill'>2-2</span> 4학점</td></tr>",
+   "<tr><td class=\"type\">일반</td><td class=\"name\">화법과 언어</td><td class=\"credit\">4</td><td class=\"sem-cell\"><span class='sem-pill'>3-1</span> 4학점</td></tr>",
+   "<tr><td class=\"type\">융합</td><td class=\"name\">독서 토론과 글쓰기</td><td class=\"credit\">4</td><td class=\"sem-cell\"><span class='sem-pill'>3-2</span> 4학점</td></tr>",
+   "<tr><td class=\"subj\" rowspan=\"6\">수 학</td><td class=\"type\">공통</td><td class=\"name\">공통수학1</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"sem-cell\"><span class='sem-pill'>1-1</span> 3학점</td><td class=\"credit-total\" rowspan=\"6\">22<span class='paren'>(8)</span></td></tr>",
+   "<tr><td class=\"type\">공통</td><td class=\"name\">공통수학2</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"sem-cell\"><span class='sem-pill'>1-2</span> 3학점</td></tr>",
+   "<tr><td class=\"type\">일반</td><td class=\"name\">대수</td><td class=\"credit\">4</td><td class=\"sem-cell\"><span class='sem-pill'>2-1</span> 4학점</td></tr>",
+   "<tr><td class=\"type\">일반</td><td class=\"name\">미적분Ⅰ</td><td class=\"credit\">4</td><td class=\"sem-cell\"><span class='sem-pill'>2-2</span> 4학점</td></tr>",
+   "<tr><td class=\"type\">일반</td><td class=\"name\">확률과 통계</td><td class=\"credit\">4</td><td class=\"sem-cell\"><span class='sem-pill'>3-1</span> 4학점</td></tr>",
+   "<tr><td class=\"type\">융합</td><td class=\"name\">실용 통계</td><td class=\"credit\">4</td><td class=\"sem-cell\"><span class='sem-pill'>3-2</span> 4학점</td></tr>",
+   "<tr><td class=\"subj\" rowspan=\"6\">영 어</td><td class=\"type\">공통</td><td class=\"name\">공통영어1</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"sem-cell\"><span class='sem-pill'>1-1</span> 3학점</td><td class=\"credit-total\" rowspan=\"6\">22<span class='paren'>(8)</span></td></tr>",
+   "<tr><td class=\"type\">공통</td><td class=\"name\">공통영어2</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"sem-cell\"><span class='sem-pill'>1-2</span> 3학점</td></tr>",
+   "<tr><td class=\"type\">일반</td><td class=\"name\">영어Ⅰ</td><td class=\"credit\">4</td><td class=\"sem-cell\"><span class='sem-pill'>2-1</span> 4학점</td></tr>",
+   "<tr><td class=\"type\">일반</td><td class=\"name\">영어Ⅱ</td><td class=\"credit\">4</td><td class=\"sem-cell\"><span class='sem-pill'>2-2</span> 4학점</td></tr>",
+   "<tr><td class=\"type\">일반</td><td class=\"name\">영어 독해와 작문</td><td class=\"credit\">4</td><td class=\"sem-cell\"><span class='sem-pill'>3-1</span> 4학점</td></tr>",
+   "<tr><td class=\"type\">융합</td><td class=\"name\">미디어 영어</td><td class=\"credit\">4</td><td class=\"sem-cell\"><span class='sem-pill'>3-2</span> 4학점</td></tr>",
+   "<tr><td class=\"subj\" rowspan=\"4\">사 회<br>(역사/도덕 포함)</td><td class=\"type\">공통</td><td class=\"name\">한국사1</td><td class=\"credit\">3</td><td class=\"sem-cell\"><span class='sem-pill'>1-1</span> 3학점</td><td class=\"credit-total\" rowspan=\"2\">6<span class='paren'>(6)</span></td></tr>",
+   "<tr><td class=\"type\">공통</td><td class=\"name\">한국사1</td><td class=\"credit\">3</td><td class=\"sem-cell\"><span class='sem-pill'>1-2</span> 3학점</td></tr>",
+   "<tr><td class=\"type\">공통</td><td class=\"name\">통합사회1</td><td class=\"credit\">4</td><td class=\"sem-cell\"><span class='sem-pill'>1-1</span> 4학점</td><td class=\"credit-total\" rowspan=\"2\">8<span class='paren'>(8)</span></td></tr>",
+   "<tr><td class=\"type\">공통</td><td class=\"name\">통합사회2</td><td class=\"credit\">4</td><td class=\"sem-cell\"><span class='sem-pill'>1-2</span> 4학점</td></tr>",
+   "<tr><td class=\"subj\" rowspan=\"4\">과 학</td><td class=\"type\">공통</td><td class=\"name\">통합과학1</td><td class=\"credit\">4</td><td class=\"sem-cell\"><span class='sem-pill'>1-1</span> 4학점</td><td class=\"credit-total\" rowspan=\"4\">10<span class='paren'>(10)</span></td></tr>",
+   "<tr><td class=\"type\">공통</td><td class=\"name\">통합과학2</td><td class=\"credit\">4</td><td class=\"sem-cell\"><span class='sem-pill'>1-2</span> 4학점</td></tr>",
+   "<tr><td class=\"type\">공통</td><td class=\"name\">과학탐구실험1</td><td class=\"credit\">1</td><td class=\"sem-cell\"><span class='sem-pill'>1-1</span> 1학점</td></tr>",
+   "<tr><td class=\"type\">공통</td><td class=\"name\">과학탐구실험2</td><td class=\"credit\">1</td><td class=\"sem-cell\"><span class='sem-pill'>1-2</span> 1학점</td></tr>",
+   "<tr><td class=\"subj\" rowspan=\"6\">체 육</td><td class=\"type\">일반</td><td class=\"name\">체육1</td><td class=\"credit\">3<span class='slash'>/</span>2</td><td class=\"sem-cell\"><span class='sem-pill'>1-1</span> 2학점</td><td class=\"credit-total\" rowspan=\"6\">10<span class='paren'>(10)</span></td></tr>",
+   "<tr><td class=\"type\">일반</td><td class=\"name\">체육2</td><td class=\"credit\">3<span class='slash'>/</span>2</td><td class=\"sem-cell\"><span class='sem-pill'>1-2</span> 2학점</td></tr>",
+   "<tr><td class=\"type\">융합</td><td class=\"name\">스포츠 생활1</td><td class=\"credit\">3<span class='slash'>/</span>2</td><td class=\"sem-cell\"><span class='sem-pill'>2-1</span> 2학점</td></tr>",
+   "<tr><td class=\"type\">융합</td><td class=\"name\">스포츠 생활2</td><td class=\"credit\">3<span class='slash'>/</span>2</td><td class=\"sem-cell\"><span class='sem-pill'>2-2</span> 2학점</td></tr>",
+   "<tr><td class=\"type\">진로</td><td class=\"name\">스포츠 문화</td><td class=\"credit\">2<span class='slash'>/</span>1</td><td class=\"sem-cell\"><span class='sem-pill'>3-1</span> 1학점</td></tr>",
+   "<tr><td class=\"type\">진로</td><td class=\"name\">스포츠 과학</td><td class=\"credit\">2<span class='slash'>/</span>1</td><td class=\"sem-cell\"><span class='sem-pill'>3-2</span> 1학점</td></tr>",
+   "<tr><td class=\"subj\" rowspan=\"4\">예 술</td><td class=\"type\">일반</td><td class=\"name\">음악</td><td class=\"credit\">3</td><td class=\"sem-cell\"><span class='sem-pill'>1-1</span> 3학점<br><span class='sem-pill alt'>1-2</span> [3] <i>대체</i></td><td class=\"credit-total\" rowspan=\"4\">10<span class='paren'>(10)</span></td></tr>",
+   "<tr><td class=\"type\">일반</td><td class=\"name\">미술</td><td class=\"credit\">3</td><td class=\"sem-cell\"><span class='sem-pill alt'>1-1</span> [3] <i>대체</i><br><span class='sem-pill'>1-2</span> 3학점</td></tr>",
+   "<tr><td class=\"type\">진로</td><td class=\"name\">음악 감상과 비평</td><td class=\"credit\">3<span class='slash'>/</span>2</td><td class=\"sem-cell\"><span class='sem-pill'>3-1</span> 2학점<br><span class='sem-pill alt'>3-2</span> [2] <i>대체</i></td></tr>",
+   "<tr><td class=\"type\">진로</td><td class=\"name\">미술 감상과 비평</td><td class=\"credit\">3<span class='slash'>/</span>2</td><td class=\"sem-cell\"><span class='sem-pill alt'>3-1</span> [2] <i>대체</i><br><span class='sem-pill'>3-2</span> 2학점</td></tr>",
+   "<tr><td class=\"subj\" rowspan=\"2\">기술∙가정/정보</td><td class=\"type\">일반</td><td class=\"name\">정보</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"sem-cell\"><span class='sem-pill'>1-1</span> 3학점<br><span class='sem-pill alt'>1-2</span> [3] <i>대체</i></td><td class=\"credit-total\" rowspan=\"2\">6<span class='paren'>(10)</span></td></tr>",
+   "<tr><td class=\"type\">진로</td><td class=\"name\">로봇과 공학세계</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"sem-cell\"><span class='sem-pill alt'>1-1</span> [3] <i>대체</i><br><span class='sem-pill'>1-2</span> 3학점</td></tr>",
+   "<tr><td class=\"subj\" rowspan=\"2\">교 양</td><td class=\"type\">일반</td><td class=\"name\">진로와 직업</td><td class=\"credit\">3<span class='slash'>/</span>2</td><td class=\"sem-cell\"><span class='sem-pill'>3-1</span> 2학점</td><td class=\"credit-total\" rowspan=\"2\">4</td></tr>",
+   "<tr><td class=\"type\">일반</td><td class=\"name\">생태와 환경</td><td class=\"credit\">3<span class='slash'>/</span>2</td><td class=\"sem-cell\"><span class='sem-pill'>3-2</span> 2학점</td></tr>"
+  ],
+  "banner": [
+   "이수학점 합계 120학점"
+  ],
+  "n_cols": 6
+ },
+ "sec2": {
+  "headers": [
+   "교과(군)",
+   "과목 유형",
+   "과목",
+   "학점<br><span class='sub-h'>기본/운영</span>",
+   "이수 시기"
+  ],
+  "rows": [
+   "<tr><td class=\"subj\">국 어</td><td class=\"type\">진로</td><td class=\"name\">문학과 영상</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"sem-cell\" rowspan=\"11\"><span class='sem-pill pool'>2-1</span> 12<br>(택4)</td></tr>",
+   "<tr><td class=\"subj\">수 학</td><td class=\"type\">진로</td><td class=\"name\">기하</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>",
+   "<tr><td class=\"subj\">영 어</td><td class=\"type\">진로</td><td class=\"name\">영어 발표와 토론</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>",
+   "<tr><td class=\"subj\" rowspan=\"4\">사 회<br>(역사/도덕 포함)</td><td class=\"type\">일반</td><td class=\"name\">세계사</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>",
+   "<tr><td class=\"type\">일반</td><td class=\"name\">사회와 문화</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>",
+   "<tr><td class=\"type\">일반</td><td class=\"name\">현대사회와 윤리</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>",
+   "<tr><td class=\"type\">진로</td><td class=\"name\">도시의 미래 탐구</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>",
+   "<tr><td class=\"subj\" rowspan=\"4\">과 학</td><td class=\"type\">일반</td><td class=\"name\">물리학</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>",
+   "<tr><td class=\"type\">일반</td><td class=\"name\">화학</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>",
+   "<tr><td class=\"type\">일반</td><td class=\"name\">생명과학</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>",
+   "<tr><td class=\"type\">일반</td><td class=\"name\">지구과학</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>",
+   "<tr><td class=\"subj\" rowspan=\"2\">제2외국어/한문</td><td class=\"type\">일반</td><td class=\"name\">중국어</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"sem-cell\" rowspan=\"2\"><span class='sem-pill pool'>2-1</span> 3<br>(택1)</td></tr>",
+   "<tr><td class=\"type\">일반</td><td class=\"name\">일본어</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>",
+   "<tr><td class=\"subj\">국 어</td><td class=\"type\">융합</td><td class=\"name\">매체 의사소통</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"sem-cell\" rowspan=\"11\"><span class='sem-pill pool'>2-2</span> 12<br>(택4)</td></tr>",
+   "<tr><td class=\"subj\">수 학</td><td class=\"type\">진로</td><td class=\"name\">인공지능 수학</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>",
+   "<tr><td class=\"subj\">영 어</td><td class=\"type\">진로</td><td class=\"name\">심화 영어</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>",
+   "<tr><td class=\"subj\" rowspan=\"4\">사 회<br>(역사/도덕 포함)</td><td class=\"type\">일반</td><td class=\"name\">세계시민과 지리</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>",
+   "<tr><td class=\"type\">진로</td><td class=\"name\">정치</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>",
+   "<tr><td class=\"type\">진로</td><td class=\"name\">인문학과 윤리</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>",
+   "<tr><td class=\"type\">융합</td><td class=\"name\">역사로 탐구하는 현대 세계</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>",
+   "<tr><td class=\"subj\" rowspan=\"4\">과 학</td><td class=\"type\">진로</td><td class=\"name\">역학과 에너지</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>",
+   "<tr><td class=\"type\">진로</td><td class=\"name\">물질과 에너지</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>",
+   "<tr><td class=\"type\">진로</td><td class=\"name\">세포와 물질대사</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>",
+   "<tr><td class=\"type\">진로</td><td class=\"name\">지구시스템과학</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>",
+   "<tr><td class=\"subj\" rowspan=\"2\">제2외국어/한문</td><td class=\"type\">진로</td><td class=\"name\">중국어 회화</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"sem-cell\" rowspan=\"2\"><span class='sem-pill pool'>2-2</span> 3<br>(택1)</td></tr>",
+   "<tr><td class=\"type\">진로</td><td class=\"name\">일본어 회화</td><td class=\"credit\">4<span class='slash'>/</span>3</td></tr>"
+  ],
+  "banner": [
+   "이수학점 30학점"
+  ],
+  "n_cols": 5
+ },
+ "sec3": {
+  "headers": [
+   "교과(군)",
+   "과목 유형",
+   "과목",
+   "학점<br><span class='sub-h'>기본/운영</span>",
+   "이수 시기",
+   "비고"
+  ],
+  "rows": [
+   "<tr><td class=\"subj\">국 어</td><td class=\"type\">진로</td><td class=\"name\">주제 탐구 독서</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"sem-cell\" rowspan=\"13\"><span class='sem-pill pool'>3-1</span> 12<br>(택4)</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"subj\">수 학</td><td class=\"type\">진로</td><td class=\"name\">미적분Ⅱ</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"subj\">영 어</td><td class=\"type\">진로</td><td class=\"name\">심화 영어 독해와 작문</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"subj\" rowspan=\"6\">사 회<br>(역사/도덕 포함)</td><td class=\"type\">진로</td><td class=\"name\">한국지리 탐구</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"type\">진로</td><td class=\"name\">동아시아 역사 기행</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"type\">진로</td><td class=\"name\">법과 사회</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"type\">진로</td><td class=\"name\">경제</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"type\">진로</td><td class=\"name\">윤리와 사상</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"type\">진로</td><td class=\"name\">국제 관계의 이해</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"subj\" rowspan=\"4\">과 학</td><td class=\"type\">진로</td><td class=\"name\">전자기와 양자</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"type\">진로</td><td class=\"name\">화학 반응의 세계</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"type\">진로</td><td class=\"name\">생물의 유전</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"type\">진로</td><td class=\"name\">행성우주과학</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"subj\">국 어</td><td class=\"type\">융합</td><td class=\"name\">언어생활 탐구</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"sem-cell\" rowspan=\"11\"><span class='sem-pill pool'>3-2</span> 12<br>(택4)</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"subj\">수 학</td><td class=\"type\">진로</td><td class=\"name\">전문 수학</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"sem-cell\"><span class='sem-pill'>2-1</span> 3학점</td><td class=\"note\">특목고 선택 과목</td></tr>",
+   "<tr><td class=\"subj\">영 어</td><td class=\"type\">융합</td><td class=\"name\">세계 문화와 영어</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"subj\" rowspan=\"5\">사 회<br>(역사/도덕 포함)</td><td class=\"type\">융합</td><td class=\"name\">여행지리</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"type\">융합</td><td class=\"name\">사회문제 탐구</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"type\">융합</td><td class=\"name\">금융과 경제생활</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"type\">융합</td><td class=\"name\">윤리문제 탐구</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"type\">융합</td><td class=\"name\">기후변화와 지속가능한 세계</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"subj\" rowspan=\"3\">과 학</td><td class=\"type\">융합</td><td class=\"name\">과학의 역사와 문화</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"type\">융합</td><td class=\"name\">기후변화와 환경생태</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"note\"></td></tr>",
+   "<tr><td class=\"type\">융합</td><td class=\"name\">융합과학 탐구</td><td class=\"credit\">4<span class='slash'>/</span>3</td><td class=\"note\"></td></tr>"
+  ],
+  "banner": [
+   "이수학점 24학점"
+  ],
+  "n_cols": 6
+ },
+ "summary_rows": [
+  {
+   "grade": "1학년",
+   "sem": "1학기",
+   "subj": 29,
+   "act": 3,
+   "tot": 32,
+   "cnt": 10
+  },
+  {
+   "grade": "1학년",
+   "sem": "2학기",
+   "subj": 29,
+   "act": 3,
+   "tot": 32,
+   "cnt": 10
+  },
+  {
+   "grade": "2학년",
+   "sem": "1학기",
+   "subj": 29,
+   "act": 3,
+   "tot": 32,
+   "cnt": 9
+  },
+  {
+   "grade": "2학년",
+   "sem": "2학기",
+   "subj": 29,
+   "act": 3,
+   "tot": 32,
+   "cnt": 9
+  },
+  {
+   "grade": "3학년",
+   "sem": "1학기",
+   "subj": 29,
+   "act": 3,
+   "tot": 32,
+   "cnt": 10
+  },
+  {
+   "grade": "3학년",
+   "sem": "2학기",
+   "subj": 29,
+   "act": 3,
+   "tot": 32,
+   "cnt": 10
+  }
+ ],
+ "grand": {
+  "subj_total": 174,
+  "act_total": 18,
+  "tot_total": 192,
+  "year_totals": [
+   64,
+   64,
+   64
+  ]
+ }
+}</script>
+
+<script>
+function showGrade(id, btn){
+  document.querySelectorAll('.grade-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tabs-l1 button').forEach(b=>b.classList.remove('active'));
+  document.getElementById('grade-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+function showSub(grade, key, btn){
+  ['a','b','c','d'].forEach(k=>{
+    document.getElementById(grade+'-'+k).classList.remove('active');
+  });
+  document.getElementById(grade+'-'+key).classList.add('active');
+  const parent = btn.parentElement;
+  parent.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function renderSection(data, title){
+  let html = '<div class="card">';
+  html += '<div class="card-head"><h2>'+title+'</h2>';
+  if(data.banner && data.banner.length){
+    html += '<div class="banner-tags">'+data.banner.map(b=>'<span>'+b+'</span>').join('')+'</div>';
+  }
+  html += '</div>';
+  html += '<table><thead><tr>'+data.headers.map(h=>'<th>'+h+'</th>').join('')+'</tr></thead><tbody>';
+  html += data.rows.join('');
+  html += '</tbody></table></div>';
+  return html;
+}
+
+function renderSummary(rows, grand){
+  let html = '<div class="stat-grid">';
+  html += '<div class="stat-box"><div class="num">'+grand.subj_total+'</div><div class="lbl">교과 이수학점 소계</div></div>';
+  html += '<div class="stat-box"><div class="num">'+grand.act_total+'</div><div class="lbl">창의적 체험활동</div></div>';
+  html += '<div class="stat-box"><div class="num">'+grand.tot_total+'</div><div class="lbl">총 이수학점</div></div>';
+  html += '<div class="stat-box"><div class="num">'+grand.year_totals.join(' / ')+'</div><div class="lbl">학년별 이수학점 (1·2·3학년)</div></div>';
+  html += '</div>';
+
+  html += '<div class="card" style="margin-top:12px;"><div class="card-head"><h2>학기별 이수학점 상세</h2></div>';
+  html += '<table class="summary-table"><thead><tr><th>학년</th><th>학기</th><th>교과<br>이수학점</th><th>창의적<br>체험활동</th><th>학기별<br>총 이수학점</th><th>이수<br>과목 수</th></tr></thead><tbody>';
+  let prevGrade = null;
+  rows.forEach((r,i)=>{
+    html += '<tr>';
+    if(r.grade !== prevGrade){
+      html += '<td class="grade-cell" rowspan="2">'+r.grade+'</td>';
+      prevGrade = r.grade;
+    }
+    html += '<td>'+r.sem+'</td><td>'+r.subj+'</td><td>'+r.act+'</td><td>'+r.tot+'</td><td>'+r.cnt+'</td>';
+    html += '</tr>';
+  });
+  html += '<tr class="grand"><td colspan="2">총계</td><td>'+grand.subj_total+'</td><td>'+grand.act_total+'</td><td>'+grand.tot_total+'</td><td>-</td></tr>';
+  html += '</tbody></table></div>';
+  return html;
+}
+
+['g1','g2'].forEach(tag=>{
+  const data = JSON.parse(document.getElementById('data-'+tag).textContent);
+  document.getElementById(tag+'-a').innerHTML = renderSection(data.sec1, '학교지정 (공통 필수)');
+  document.getElementById(tag+'-b').innerHTML = renderSection(data.sec2, '2학년 선택');
+  document.getElementById(tag+'-c').innerHTML = renderSection(data.sec3, '3학년 선택');
+  document.getElementById(tag+'-d').innerHTML = renderSummary(data.summary_rows, data.grand);
+});
+</script>
+
+</body>
+</html>
